@@ -1,7 +1,7 @@
 import 'package:currency/core-utils/json.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../core-currency-api/api/const.dart';
+import '../core-currency-api/const.dart';
 import '../utils/expect.dart';
 import '../utils/file_utils.dart';
 

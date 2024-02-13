@@ -4,7 +4,7 @@ import 'package:currency/core-network/response/http_response_code_type.dart';
 import 'package:currency/core-network/response/json_model_mapper.dart';
 import 'package:currency/core-network/response/response_result_mapper.dart';
 import 'package:currency/core-utils/result.dart';
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -29,7 +29,7 @@ void main() {
 
   setUp(() {
     responseMock = MockResponse();
-    when(responseMock.body).thenReturn(responseBodyData);
+    when(responseMock.data).thenReturn(responseBodyData);
 
     stringMapperMock = MockJsonModelMapper<String>();
     when(stringMapperMock(responseBodyData)).thenReturn(mappedValue);
@@ -62,7 +62,7 @@ void main() {
   group('Tests with failed response', () {
     setUp(() {
       when(responseMock.statusCode).thenReturn(httpFailedCode);
-      when(responseMock.reasonPhrase).thenReturn(responsePhraseData);
+      when(responseMock.statusMessage).thenReturn(responsePhraseData);
     });
 
     test('Given failed response when call mapper then result contains the correct value', () {
@@ -80,7 +80,7 @@ void main() {
     });
 
     test('Given failed response without reason phrase when call mapper then result contains the empty string', () {
-      when(responseMock.reasonPhrase).thenReturn(null);
+      when(responseMock.statusMessage).thenReturn(null);
 
       Result<String> actualResult = mapper.call<String>(responseMock, stringMapperMock);
 

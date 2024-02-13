@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:currency/core-network/response/json_model_mapper.dart';
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import '../../core-utils/result.dart';
 import 'http_response_code_mapper.dart';
 import 'http_response_code_type.dart';
@@ -17,11 +17,11 @@ class ResponseResultMapper {
   ///[jsonMapper] a [Function] which is called to convert JSON to the object. The conversion process is placed in
   ///additional classes (e.g. [RateDataModelMapper])
   Result<T> call<T>(final Response response, final JsonModelMapper<T> jsonMapper) {
-    HttpResponseCodeType httpResponseCodeType = _httpResponseCodeMapper(response.statusCode);
+    HttpResponseCodeType httpResponseCodeType = _httpResponseCodeMapper(response.statusCode ?? -1);
 
     return switch(httpResponseCodeType) {
-      HttpResponseCodeType.success => Success(jsonMapper(response.body)),
-      _ => HttpError(responseCodeType: httpResponseCodeType, exception: HttpException(response.reasonPhrase ?? ""))
+      HttpResponseCodeType.success => Success(jsonMapper(response.data)),
+      _ => HttpError(responseCodeType: httpResponseCodeType, exception: HttpException(response.statusMessage ?? ""))
     };
   }
 }
