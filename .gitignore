@@ -560,3 +560,4 @@ tags
 **/*.g.dart
 **/*.freezed.dart
 **/*.mocks.dart
+/api_secrets.env
