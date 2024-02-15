@@ -1,5 +1,5 @@
 extension Range on num {
-  bool isBetween(num from, num to, [bool incLeft = false, bool incRight = false]) {
+  bool isBetween(num from, num to, {bool incLeft = false, bool incRight = false}) {
     bool isLeft = switch(incLeft) {
       true => from <= this,
       false => from < this

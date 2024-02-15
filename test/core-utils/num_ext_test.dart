@@ -47,7 +47,7 @@ void main() {
         [inRangeRight, false, true, true]
       ],
       p4((num value, bool incLeft, bool incRight, bool expectedResult){
-        bool actualResult = value.isBetween(rangeStart, rangeEnd, incLeft, incRight);
+        bool actualResult = value.isBetween(rangeStart, rangeEnd, incLeft: incLeft, incRight: incRight);
 
         expect(actualResult, expectedResult);
       }));

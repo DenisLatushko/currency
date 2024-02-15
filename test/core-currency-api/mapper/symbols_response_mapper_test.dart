@@ -1,43 +1,38 @@
 import 'package:currency/core-currency-api/mapper/symbols_response_mapper.dart';
 import 'package:currency/core-currency-api/response/symbols_response.dart';
-import 'package:currency/core-utils/json.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:test/test.dart';
-
-import '../../utils/expect.dart';
+import 'package:flutter_test/flutter_test.dart';
+import '../../utils/file_utils.dart';
 import '../const.dart';
-import 'symbols_response_mapper_test.mocks.dart';
 
-///Tests to check [SymbolsResponseMapper]
-@GenerateMocks([Json])
+///Tests to check the behaviour of [SymbolsResponseMapper]
 void main() {
-  late MockJson jsonMock;
-  late SymbolsResponseMapper mapper;
 
-  late Map<String, dynamic>? jsonMap = {
-    "success": true,
-    "symbols": {"BGN": "Bulgarian Lev", "ALL": "Albanian Lek"}
-  };
+  final SymbolsResponseMapper mapper = SymbolsResponseMapper();
 
-  setUp(() {
-    jsonMock = MockJson();
-    mapper = SymbolsResponseMapper(jsonMock);
+  test('Given symbols JSON text when map from JSON then object has all values', () {
+    const SymbolsResponse expectedResponse = SymbolsResponse(symbols: {"BGN": "Bulgarian Lev", "ALL": "Albanian Lek"});
+    final Map<String, dynamic> json = readJsonFromFile(symbolsFilePath);
+
+    SymbolsResponse actualResponse = mapper(json);
+
+    expect(actualResponse, expectedResponse);
   });
 
-  test("Given valid JSON text data when call mapper then value returned", () {
-    when(jsonMock.decode(any)).thenReturn(jsonMap);
+  test('Given symbols JSON text with empty data when map from JSON then object has no any values', () {
+    SymbolsResponse expectedResponse = const SymbolsResponse(symbols: null);
+    final Map<String, dynamic> json = readJsonFromFile(symbolsEmptyDataFilePath);
 
-    SymbolsResponse? actualResult = mapper("");
+    SymbolsResponse actualResponse = mapper(json);
 
-    expect(actualResult, fullDataSymbolResponse);
+    expect(actualResponse, expectedResponse);
   });
 
-  test("Given non-valid JSON text data when call mapper then returned value is NULL", () {
-    when(jsonMock.decode(any)).thenReturn(null);
+  test('Given empty symbols JSON text when map from JSON then symbols map is empty', () {
+    SymbolsResponse expectedResponse = const SymbolsResponse(symbols: {});
+    final Map<String, dynamic> json = readJsonFromFile(symbolsEmptyMapFilePath);
 
-    SymbolsResponse? actualResult = mapper("");
+    SymbolsResponse actualResponse = mapper(json);
 
-    expectTrue(actualResult == null);
+    expect(actualResponse, expectedResponse);
   });
 }

@@ -1,27 +1,29 @@
 import 'dart:io';
-import 'package:currency/core-network/response/json_model_mapper.dart';
+import 'package:currency/core-network/response/network_error.dart';
+import 'package:currency/core-network/response/response_model_mapper.dart';
+import 'package:currency/core-utils/num_ext.dart';
 import 'package:dio/dio.dart';
-import '../../core-utils/result.dart';
-import 'http_response_code_mapper.dart';
-import 'http_response_code_type.dart';
+import 'package:currency/core-utils/result.dart';
 
 ///A mapper to convert [Response] from the remote server to an object with data from the response body
 class ResponseResultMapper {
 
-  final HttpResponseCodeMapper _httpResponseCodeMapper;
-
-  ResponseResultMapper(this._httpResponseCodeMapper);
+  static const int _httpSuccessCodesStart = 200;
+  static const int _httpSuccessCodesEnd = 200;
 
   ///A function to do the conversion
   ///[response] is a response object received from the HTTP framework as a result of HTTP request
-  ///[jsonMapper] a [Function] which is called to convert JSON to the object. The conversion process is placed in
-  ///additional classes (e.g. [RateDataModelMapper])
-  Result<T> call<T>(final Response response, final JsonModelMapper<T> jsonMapper) {
-    HttpResponseCodeType httpResponseCodeType = _httpResponseCodeMapper(response.statusCode ?? -1);
-
-    return switch(httpResponseCodeType) {
-      HttpResponseCodeType.success => Success(jsonMapper(response.data)),
-      _ => HttpError(responseCodeType: httpResponseCodeType, exception: HttpException(response.statusMessage ?? ""))
+  ///[jsonMapper] a [Function] which is called to convert response to an object
+  Result<S, NetworkError> call<S>(final Response response, final ResponseModelMapper<S> responseModelMapper) {
+    int statusCode = response.statusCode ?? httpStatusCodeNotSet;
+    return switch(statusCode.isBetween(_httpSuccessCodesStart, _httpSuccessCodesEnd, incLeft: true, incRight: true)) {
+      true => responseModelMapper(response.data),
+      false => getHttpError(statusCode, response.statusMessage ?? "")
     };
+  }
+
+  Result<S, NetworkError> getHttpError<S>(int httpCode, String statusMessage) {
+    HttpError httpError = HttpError(httpCode: httpCode, exception: HttpException(statusMessage));
+    return Error<S, NetworkError>(httpError);
   }
 }

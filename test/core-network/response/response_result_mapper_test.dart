@@ -1,98 +1,119 @@
 import 'dart:io';
-import 'package:currency/core-network/response/http_response_code_mapper.dart';
-import 'package:currency/core-network/response/http_response_code_type.dart';
-import 'package:currency/core-network/response/json_model_mapper.dart';
+import 'package:currency/core-network/response/network_error.dart';
+import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-network/response/response_result_mapper.dart';
 import 'package:currency/core-utils/result.dart';
 import 'package:dio/dio.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
-
 import '../../utils/expect.dart';
+
 import 'response_result_mapper_test.mocks.dart';
 
 ///Tests for [ResponseResultMapper]
-@GenerateMocks([HttpResponseCodeMapper, Response, JsonModelMapper])
+@GenerateMocks([Response, ResponseModelMapper])
 void main() {
   const httpSuccessCode = 200;
   const httpFailedCode = 500;
-  const responseBodyData = "RESPONSE_BODY";
+  const successResponseBodyData = "SUCCESS_RESPONSE_BODY";
+  const errorResponseBodyData = "ERROR_RESPONSE_BODY";
   const responsePhraseData = "RESPONSE_PHRASE";
   const mappedValue = "MAPPED_VALUE";
 
-  late Response responseMock;
-  late MockJsonModelMapper<String> stringMapperMock;
-  late MockHttpResponseCodeMapper httpResponseCodeMapperMock;
+  final successResponseModel = Success<String, NetworkError>(mappedValue);
+  late MockResponse responseMock;
+  late MockResponseModelMapper<String> responseModelMapper;
 
   late ResponseResultMapper mapper;
 
   setUp(() {
     responseMock = MockResponse();
-    when(responseMock.data).thenReturn(responseBodyData);
+    responseModelMapper = MockResponseModelMapper<String>();
+    mapper = ResponseResultMapper();
 
-    stringMapperMock = MockJsonModelMapper<String>();
-    when(stringMapperMock(responseBodyData)).thenReturn(mappedValue);
-
-    httpResponseCodeMapperMock = MockHttpResponseCodeMapper();
-    when(httpResponseCodeMapperMock.call(httpSuccessCode)).thenReturn(HttpResponseCodeType.success);
-    when(httpResponseCodeMapperMock.call(httpFailedCode)).thenReturn(HttpResponseCodeType.unknown);
-
-    mapper = ResponseResultMapper(httpResponseCodeMapperMock);
+    when(responseModelMapper(successResponseBodyData)).thenReturn(successResponseModel);
   });
 
   group('Tests with success response', () {
-    setUp(() => when(responseMock.statusCode).thenReturn(httpSuccessCode));
+    provideDummy<Result<String, NetworkError>>(successResponseModel);
+
+    setUp(() {
+      when(responseMock.statusCode).thenReturn(httpSuccessCode);
+      when(responseMock.data).thenReturn(successResponseBodyData);
+      when(responseMock.statusMessage).thenReturn(responsePhraseData);
+    });
 
     test('Given success response when call mapper then result contains the correct value', () {
-      Result<String> actualResult = mapper.call<String>(responseMock, stringMapperMock);
+      Result<String, NetworkError> actualResult = mapper.call<String>(responseMock, responseModelMapper);
 
-      expectTrue(actualResult is Success<String>);
+      expectTrue(actualResult is Success<String, NetworkError>);
       expect(actualResult.asSuccess().data, mappedValue);
     });
 
     test('Given success response when call mapper then all instances are called correctly', () {
-      mapper.call<String>(responseMock, stringMapperMock);
+      mapper.call<String>(responseMock, responseModelMapper);
 
-      verify(httpResponseCodeMapperMock.call(httpSuccessCode)).called(1);
-      verify(stringMapperMock.call(responseBodyData)).called(1);
+      verify(responseModelMapper(successResponseBodyData)).called(1);
     });
   });
 
   group('Tests with failed response', () {
     setUp(() {
       when(responseMock.statusCode).thenReturn(httpFailedCode);
+      when(responseMock.data).thenReturn(errorResponseBodyData);
       when(responseMock.statusMessage).thenReturn(responsePhraseData);
     });
 
-    test('Given failed response when call mapper then result contains the correct value', () {
-      Result<String> actualResult = mapper.call<String>(responseMock, stringMapperMock);
+    test('Given failed response when call mapper then result is HttpError', () {
+      Result<String, NetworkError> actualResult = mapper.call<String>(responseMock, responseModelMapper);
 
-      expectTrue(actualResult is HttpError<String>);
-      expect(actualResult.asHttpError().responseCodeType, HttpResponseCodeType.unknown);
+      expectTrue(actualResult is Error<String, NetworkError>);
+      expectTrue(actualResult.asError().error is HttpError);
     });
 
-    test('Given failed response with reason phrase when call mapper then result contains the reason phrase', () {
-      Result<String> actualResult = mapper.call<String>(responseMock, stringMapperMock);
+    test('Given failed response when call mapper then result contains http code', () {
+      int actualResult = mapper.call<String>(responseMock, responseModelMapper)
+          .asError()
+          .toHttpError()
+          .httpCode;
 
-      expectTrue(actualResult.asHttpError().exception is HttpException);
-      expect((actualResult.asHttpError().exception as HttpException).message, responsePhraseData);
+      expect(actualResult, httpFailedCode);
     });
 
-    test('Given failed response without reason phrase when call mapper then result contains the empty string', () {
-      when(responseMock.statusMessage).thenReturn(null);
+    test('Given failed response when call mapper then result contains HttpException', () {
+      Exception? actualResult = mapper.call<String>(responseMock, responseModelMapper)
+          .asError()
+          .toHttpError()
+          .exception;
 
-      Result<String> actualResult = mapper.call<String>(responseMock, stringMapperMock);
+      expectTrue(actualResult != null);
+      expectTrue(actualResult is HttpException);
+    });
 
-      expectTrue(actualResult.asHttpError().exception is HttpException);
-      expect((actualResult.asHttpError().exception as HttpException).message, "");
+    test('Given failed response when call mapper then result contains HttpException', () {
+      String actualResult = mapper.call<String>(responseMock, responseModelMapper)
+          .asError()
+          .toHttpError()
+          .exception
+          .toHttpException()
+          .message;
+
+      expect(actualResult, responsePhraseData);
     });
 
     test('Given failed response when call mapper then then all instances are called correctly', () {
-      mapper.call<String>(responseMock, stringMapperMock);
+      mapper.call<String>(responseMock, responseModelMapper);
 
-      verify(httpResponseCodeMapperMock.call(httpFailedCode)).called(1);
-      verifyZeroInteractions(stringMapperMock);
+      verifyZeroInteractions(responseModelMapper);
     });
   });
+}
+
+extension _ErrorExt on Error<String, NetworkError> {
+  HttpError toHttpError() => error as HttpError;
+}
+
+extension _ExceptionExt on Exception? {
+  HttpException toHttpException() => this as HttpException;
 }

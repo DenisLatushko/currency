@@ -6,14 +6,13 @@ part 'symbols_response.g.dart';
 ///A model which presents Symbols Response data received from API.
 ///See https://fixer.io/documentation -> Endpoints -> Supported Symbols Endpoint
 @JsonSerializable(createToJson: false)
-final class SymbolsResponse extends Equatable {
-  final bool? success;
+class SymbolsResponse extends Equatable {
   final Map<String, String>? symbols;
 
-  const SymbolsResponse({required this.success, required this.symbols});
+  const SymbolsResponse({required this.symbols});
 
   factory SymbolsResponse.fromJson(Map<String, dynamic> json) => _$SymbolsResponseFromJson(json);
 
   @override
-  List<Object?> get props => [success, symbols];
+  List<Object?> get props => [symbols];
 }

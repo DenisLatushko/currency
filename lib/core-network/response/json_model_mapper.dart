@@ -1,3 +1,3 @@
-abstract interface class JsonModelMapper<T> {
-  T call(String json);
+abstract class JsonModelMapper<T> {
+  T call(Map<String, dynamic> jsonData);
 }
