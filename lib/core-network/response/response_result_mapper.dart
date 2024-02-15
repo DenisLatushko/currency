@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:currency/core-utils/result.dart';
 
 ///A mapper to convert [Response] from the remote server to an object with data from the response body
-class ResponseResultMapper {
+final class ResponseResultMapper {
 
   static const int _httpSuccessCodesStart = 200;
   static const int _httpSuccessCodesEnd = 200;

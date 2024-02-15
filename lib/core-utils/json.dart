@@ -3,7 +3,7 @@ import 'dart:convert';
 class Json {
   dynamic decode(String source) {
     try {
-      return json.decode(source);
+      return jsonDecode(source);
     } catch(e) {
       return null;
     }

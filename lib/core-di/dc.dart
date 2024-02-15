@@ -1,10 +1,10 @@
+import 'package:currency/core-di/lazy_provider.dart';
 import 'package:currency/core-di/registration_controller.dart';
 import 'package:currency/core-di/scope_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
-
-import 'dc_module.dart';
-import 'dependency_provider.dart';
+import 'package:currency/core-di/dc_module.dart';
+import 'package:currency/core-di/dependency_provider.dart';
 
 ///A Singleton dependency graph manager. Basically this is a wrapper above the [GetIt] service locator.
 ///The functionality is divided by the following interfaces:
@@ -29,7 +29,10 @@ class DC implements DependencyProvider, RegistrationController, ScopeController 
   }
 
   @override
-  T get<T>(String? named) => named != null ? _getItInstance.get(instanceName: named) : _getItInstance.get();
+  T get<T extends Object>([String? named]) => named != null ? _getItInstance.get(instanceName: named) : _getItInstance.get();
+
+  @override
+  LazyProvider<T> getLazy<T extends Object>([String? named]) => LazyProvider(() => get(named));
 
   @override
   void factory<T extends Object>(T Function() factory, [String? named]) {

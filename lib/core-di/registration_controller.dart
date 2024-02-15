@@ -1,5 +1,3 @@
-import 'dc_module.dart';
-
 ///A basic type which provides all necessary methods to add dependency to the graph
 abstract interface class RegistrationController {
 
@@ -12,7 +10,4 @@ abstract interface class RegistrationController {
   ///instance of dependency provided. If there are more then one instance of one type
   ///objects then use [named] to receive the required object
   void singleton<T extends Object>(T instance, [String? named]);
-
-  ///Invoke other [modules] if needed
-  void initModule([List<DcModule> modules = const []]);
 }

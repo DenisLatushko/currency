@@ -1,6 +1,22 @@
+import 'package:currency/core-currency-api/di_module/core_currency_api_dc_module.dart';
+import 'package:currency/core-currency-api/request/symbols_request.dart';
+import 'package:currency/core-currency-api/response/symbols_response.dart';
+import 'package:currency/core-di/dc.dart';
+import 'package:currency/core-di/dependency_provider.dart';
+import 'package:currency/core-network/api_client.dart';
+import 'package:currency/core-network/di_module/core_network_dc_module.dart';
+import 'package:currency/core-network/response/network_error.dart';
+import 'package:currency/core-utils/result.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async{
+  DependencyProvider dp = DC.getDependencyProvider();
+  dp.initModule([CoreNetworkDcModule(), CoreCurrencyApiDcModule()]);
+  SymbolsRequest symbolsRequest = dp.get<SymbolsRequest>();
+  ApiClient apiClient = dp.get<ApiClient>(currencyApiClientName);
+
+  Result<SymbolsResponse, NetworkError> result = await apiClient.execute(symbolsRequest);
+  
   runApp(const MyApp());
 }
 
