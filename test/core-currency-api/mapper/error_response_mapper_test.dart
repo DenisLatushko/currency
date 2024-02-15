@@ -1,4 +1,4 @@
-import 'package:currency/core-currency-api/mapper/error_response_mapper.dart';
+import 'package:currency/core-currency-api/response/error_response_mapper.dart';
 import 'package:currency/core-currency-api/response/error_response.dart';
 import 'package:test/test.dart';
 

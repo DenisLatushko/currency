@@ -1,4 +1,4 @@
-import 'package:currency/core-currency-api/mapper/symbols_response_mapper.dart';
+import 'package:currency/core-currency-api/response/symbols_response_mapper.dart';
 import 'package:currency/core-currency-api/response/symbols_response.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../utils/file_utils.dart';
