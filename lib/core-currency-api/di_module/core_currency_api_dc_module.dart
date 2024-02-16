@@ -23,8 +23,6 @@ class CoreCurrencyApiDcModule implements DcModule {
   initModule(DependencyProvider dp, RegistrationController rc) {
     rc.factory(() => {"access_key" : CurrencyApiEnv.apiKey}, apiKeyParamMapName);
 
-    rc.factory<Interceptor>(() => RequestQueryParamsInterceptor(dp.get(apiKeyParamMapName)), apiKeyInterceptorName);
-
     rc.factory(() => SymbolsResponseMapper());
 
     rc.factory(() => ErrorResponseMapper());
@@ -37,6 +35,8 @@ class CoreCurrencyApiDcModule implements DcModule {
     );
 
     rc.factory(() => SymbolsRequest(dp.get(symbolsResponseJsonModelMapperName)));
+
+    rc.factory<Interceptor>(() => RequestQueryParamsInterceptor(dp.get(apiKeyParamMapName)), apiKeyInterceptorName);
 
     rc.factory(() {
       final BaseOptions baseOptions = BaseOptions(
