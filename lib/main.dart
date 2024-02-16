@@ -10,7 +10,7 @@ import 'package:currency/core-utils/result.dart';
 import 'package:flutter/material.dart';
 
 void main() async{
-  DependencyProvider dp = DC.getDependencyProvider();
+  DependencyProvider dp = DC.dependencyProvider;
   dp.initModule([CoreNetworkDcModule(), CoreCurrencyApiDcModule()]);
   SymbolsRequest symbolsRequest = dp.get<SymbolsRequest>();
   ApiClient apiClient = dp.get<ApiClient>(currencyApiClientName);

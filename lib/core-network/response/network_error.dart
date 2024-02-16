@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 /// A default value for HTTP codes when response does not have the value

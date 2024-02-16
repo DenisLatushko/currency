@@ -1,3 +1,5 @@
+// ignore_for_file: cascade_invocations
+
 import 'package:currency/core-currency-api/currency_api_env.dart';
 import 'package:currency/core-currency-api/request/symbols_request.dart';
 import 'package:currency/core-currency-api/response/error_response_mapper.dart';
@@ -20,12 +22,12 @@ const String symbolsResponseJsonModelMapperName = "SymbolsResponseJsonModelMappe
 
 class CoreCurrencyApiDcModule implements DcModule {
   @override
-  initModule(DependencyProvider dp, RegistrationController rc) {
+  void initModule(DependencyProvider dp, RegistrationController rc) {
     rc.factory(() => {"access_key" : CurrencyApiEnv.apiKey}, apiKeyParamMapName);
 
-    rc.factory(() => SymbolsResponseMapper());
+    rc.factory(SymbolsResponseMapper.new);
 
-    rc.factory(() => ErrorResponseMapper());
+    rc.factory(ErrorResponseMapper.new);
 
     rc.factory<ResponseModelMapper<SymbolsResponse>>(() => ResponseJsonModelMapper(
         dp.get(),

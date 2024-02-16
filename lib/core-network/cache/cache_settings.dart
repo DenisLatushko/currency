@@ -13,8 +13,7 @@ final class CacheSettings {
 
   CacheSettings(this._cacheRule, this._maxStale);
 
-  Options toOptions() {
-    return CacheOptions(
+  Options toOptions() => CacheOptions(
         store: HiveCacheStore(null),
         policy: _getCachePolicy(),
         maxStale: _maxStale,
@@ -22,13 +21,10 @@ final class CacheSettings {
         keyBuilder: CacheOptions.defaultCacheKeyBuilder,
         allowPostMethod: false
     ).toOptions();
-  }
 
-  CachePolicy _getCachePolicy() {
-    return switch(_cacheRule) {
+  CachePolicy _getCachePolicy() => switch(_cacheRule) {
       CacheRule.noCache => CachePolicy.noCache,
       CacheRule.forceCache => CachePolicy.forceCache,
       _ => CachePolicy.request
     };
-  }
 }

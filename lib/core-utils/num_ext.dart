@@ -1,3 +1,4 @@
+///Extension functions for [num] type
 extension Range on num {
   bool isBetween(num from, num to, {bool incLeft = false, bool incRight = false}) {
     bool isLeft = switch(incLeft) {

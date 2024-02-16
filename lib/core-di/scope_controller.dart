@@ -1,4 +1,4 @@
-import 'dc_module.dart';
+import 'package:currency/core-di/dc_module.dart';
 
 ///A basic type to control a dependency lifetime scope
 abstract interface class ScopeController {

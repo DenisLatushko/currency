@@ -15,19 +15,21 @@ class ApiClient implements HttpServiceClient {
 
   @override
   Future<Result<T, NetworkError>> execute<T>(ApiRequest<T> request) async {
-    Response response = await switch (request) { GetRequest() => _get(request), PostRequest() => _post(request) };
+    Response response = await switch (request) {
+      GetRequest() => _get(request),
+      PostRequest() => _post(request)
+    };
 
     return _responseResultMapper(response, request.dataModelMapper);
   }
 
-  Future<Response> _get<T>(GetRequest<T> request) {
-    return _httpClient.get(request.path, queryParameters: request.params, options: defineOptions(request));
-  }
+  Future<Response> _get<T>(GetRequest<T> request) => _httpClient.get(request.path, queryParameters: request.params,
+      options: defineOptions(request));
 
-  Future<Response> _post<T>(PostRequest<T> request) {
-    // TODO Extend the logic with different body types
-    return _httpClient.post(request.path, data: request.params, options: defineOptions(request));
-  }
+
+  // TODO Extend the logic with different body types
+  Future<Response> _post<T>(PostRequest<T> request) => _httpClient.post(request.path, data: request.params,
+      options: defineOptions(request));
 
   Options defineOptions<T>(ApiRequest<T> request) {
     CacheSettings? cacheSettings = request.cacheSettings;

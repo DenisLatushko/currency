@@ -7,5 +7,5 @@ abstract interface class DcModule {
   ///Initialize dependency.
   ///- [dp] provides necessary dependency if needed
   ///- [rc] to register new dependency
-  initModule(DependencyProvider dp, RegistrationController rc);
+  void initModule(DependencyProvider dp, RegistrationController rc);
 }

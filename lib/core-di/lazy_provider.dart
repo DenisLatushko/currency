@@ -1,3 +1,4 @@
+///A class to provide a lazy initialization for object [T]
 class LazyProvider<T> {
   final T Function() _onCreate;
 

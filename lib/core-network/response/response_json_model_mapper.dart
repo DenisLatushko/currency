@@ -5,6 +5,8 @@ import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-utils/json.dart';
 import 'package:currency/core-utils/result.dart';
 
+///A mapper with a logic to convert JSON received from HTTP response to
+///[Result] with an instance of JSON object
 class ResponseJsonModelMapper<S> implements ResponseModelMapper<S> {
   final Json _json;
   final JsonModelMapper<S> _successResponseMapper;

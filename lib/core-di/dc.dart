@@ -15,18 +15,16 @@ import 'package:currency/core-di/dependency_provider.dart';
 class DC implements DependencyProvider, RegistrationController, ScopeController {
   static final DC _instance = DC._newInstance(GetIt.instance);
 
-  static DependencyProvider getDependencyProvider() => _instance;
+  static DependencyProvider get dependencyProvider => _instance;
 
-  static ScopeController getScopeController() => _instance;
+  static ScopeController get scopeController => _instance;
 
   final GetIt _getItInstance;
 
   DC._newInstance(GetIt getIt) : _getItInstance = getIt;
 
   @visibleForTesting
-  factory DC.withClient(GetIt getItInstance) {
-    return DC._newInstance(getItInstance);
-  }
+  factory DC.withClient(GetIt getItInstance) => DC._newInstance(getItInstance);
 
   @override
   T get<T extends Object>([String? named]) => named != null ? _getItInstance.get(instanceName: named) : _getItInstance.get();
@@ -45,12 +43,12 @@ class DC implements DependencyProvider, RegistrationController, ScopeController 
   }
 
   @override
-  void popScope() {
+  void popScope() async {
     _getItInstance.popScope();
   }
 
   @override
-  void removeScope(String scopeName) {
+  void removeScope(String scopeName) async {
     _getItInstance.dropScope(scopeName);
   }
 
