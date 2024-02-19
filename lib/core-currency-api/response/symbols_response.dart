@@ -6,7 +6,7 @@ part 'symbols_response.g.dart';
 ///A model which presents Symbols Response data received from API.
 ///See https://fixer.io/documentation -> Endpoints -> Supported Symbols Endpoint
 @JsonSerializable(createToJson: false)
-class SymbolsResponse extends Equatable {
+final class SymbolsResponse extends Equatable {
   @JsonKey(name: "success") final bool success;
   @JsonKey(name: "symbols") final Map<String, String>? symbols;
 
