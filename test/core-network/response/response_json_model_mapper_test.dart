@@ -13,8 +13,8 @@ import 'response_json_model_mapper_test.mocks.dart';
 ///Tests for [ResponseJsonModelMapper]
 @GenerateMocks([Json, JsonModelMapper])
 void main() {
-  const ErrorResponse errorResponse = ErrorResponse(code: 100, info: "info");
-  const ErrorResponse errorNoInfoResponse = ErrorResponse(code: 100, info: null);
+  const ErrorResponse errorResponse = ErrorResponse(success: false, error: ErrorDataResponse(code: 104, info: "Message"));
+  const ErrorResponse errorNoInfoResponse = ErrorResponse(success: false, error: ErrorDataResponse(code: 104, info: null));
   const Object responseValue = Object();
 
   late Map<String, dynamic> jsonMapSuccessTrue = {'success': true};
@@ -91,19 +91,19 @@ void main() {
     when(errorResponseMapperMock.call(any)).thenReturn(errorResponse);
     when(jsonMock.decode(any)).thenReturn(jsonMapError);
 
-    ApiError actualResult = mapper("").asError().error as ApiError;
+    ApiError actualResult = mapper("").asError().error! as ApiError;
 
-    expect(actualResult.errorCode, errorResponse.code);
-    expect(actualResult.message, errorResponse.info);
+    expect(actualResult.errorCode, errorResponse.error!.code);
+    expect(actualResult.message, errorResponse.error!.info);
   });
 
   test('Given empty info error JSON string data when call mapper then api error has only code', () {
     when(errorResponseMapperMock.call(any)).thenReturn(errorNoInfoResponse);
     when(jsonMock.decode(any)).thenReturn(jsonMapError);
 
-    ApiError actualResult = mapper("").asError().error as ApiError;
+    ApiError actualResult = mapper("").asError().error! as ApiError;
 
-    expect(actualResult.errorCode, errorResponse.code);
+    expect(actualResult.errorCode, errorResponse.error!.code);
     expect(actualResult.message, "");
   });
 

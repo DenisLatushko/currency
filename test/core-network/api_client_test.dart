@@ -38,6 +38,7 @@ void main() {
       when(request.params).thenReturn(requestParams);
       when(request.headers).thenReturn(headers);
       when(request.dataModelMapper).thenReturn(responseModelMapperMock);
+      when(request.cacheSettings).thenReturn(null);
     }
 
     clientMock = MockDio();
@@ -58,9 +59,10 @@ void main() {
 
   void verifyHttpCallOrder(ApiRequest apiRequestMock, Function() httpClientCall) {
     verifyInOrder([
-      apiRequestMock.headers,
       apiRequestMock.path,
       apiRequestMock.params,
+      apiRequestMock.cacheSettings,
+      apiRequestMock.headers,
       httpClientCall(),
       apiRequestMock.dataModelMapper,
       responseResultMapperMock(responseMock, responseModelMapperMock)
@@ -70,14 +72,14 @@ void main() {
   test('Given api client when execute GET request then all necessary instances are invoked only once', () async {
     await apiClient.execute(getRequestMock);
 
-    clientGetCall() => clientMock.get(path, queryParameters: requestParams, options: anyNamed("options"));
+    Future<Response> clientGetCall() => clientMock.get(path, queryParameters: requestParams, options: anyNamed("options"));
     verifyHttpCallOrder(getRequestMock, clientGetCall);
   });
 
   test('Given api client when execute POST request then all necessary instances are invoked only once', () async {
     await apiClient.execute(postRequestMock);
 
-    clientPostCall() => clientMock.post(path, data: requestParams, options: anyNamed("options"));
+    Future<Response> clientPostCall() => clientMock.post(path, data: requestParams, options: anyNamed("options"));
     verifyHttpCallOrder(postRequestMock, clientPostCall);
   });
 

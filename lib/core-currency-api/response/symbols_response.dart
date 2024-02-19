@@ -7,9 +7,10 @@ part 'symbols_response.g.dart';
 ///See https://fixer.io/documentation -> Endpoints -> Supported Symbols Endpoint
 @JsonSerializable(createToJson: false)
 class SymbolsResponse extends Equatable {
-  final Map<String, String>? symbols;
+  @JsonKey(name: "success") final bool success;
+  @JsonKey(name: "symbols") final Map<String, String>? symbols;
 
-  const SymbolsResponse({required this.symbols});
+  const SymbolsResponse({required this.success, required this.symbols});
 
   factory SymbolsResponse.fromJson(Map<String, dynamic> json) => _$SymbolsResponseFromJson(json);
 

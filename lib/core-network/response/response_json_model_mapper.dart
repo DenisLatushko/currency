@@ -27,7 +27,7 @@ class ResponseJsonModelMapper<S> implements ResponseModelMapper<S> {
       return Error<S, NetworkError>(NoDataParsed());
     } else if (_isErrorResponse(jsonMap)) {
       ErrorResponse errorResponse = _errorResponseMapper(jsonMap);
-      return Error(ApiError(errorCode: errorResponse.code, message: errorResponse.info ?? ""));
+      return Error(ApiError(errorCode: errorResponse.error?.code ?? -1, message: errorResponse.error?.info ?? ""));
     } else {
       return Success(_successResponseMapper(jsonMap));
     }

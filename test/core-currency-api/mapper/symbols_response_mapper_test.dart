@@ -10,7 +10,7 @@ void main() {
   final SymbolsResponseMapper mapper = SymbolsResponseMapper();
 
   test('Given symbols JSON text when map from JSON then object has all values', () {
-    const SymbolsResponse expectedResponse = SymbolsResponse(symbols: {"BGN": "Bulgarian Lev", "ALL": "Albanian Lek"});
+    const SymbolsResponse expectedResponse = SymbolsResponse(success: true, symbols: {"BGN": "Bulgarian Lev", "ALL": "Albanian Lek"});
     final Map<String, dynamic> json = readJsonFromFile(symbolsFilePath);
 
     SymbolsResponse actualResponse = mapper(json);
@@ -19,7 +19,7 @@ void main() {
   });
 
   test('Given symbols JSON text with empty data when map from JSON then object has no any values', () {
-    SymbolsResponse expectedResponse = const SymbolsResponse(symbols: null);
+    SymbolsResponse expectedResponse = const SymbolsResponse(success: true, symbols: null);
     final Map<String, dynamic> json = readJsonFromFile(symbolsEmptyDataFilePath);
 
     SymbolsResponse actualResponse = mapper(json);
@@ -28,7 +28,7 @@ void main() {
   });
 
   test('Given empty symbols JSON text when map from JSON then symbols map is empty', () {
-    SymbolsResponse expectedResponse = const SymbolsResponse(symbols: {});
+    SymbolsResponse expectedResponse = const SymbolsResponse(success: true, symbols: {});
     final Map<String, dynamic> json = readJsonFromFile(symbolsEmptyMapFilePath);
 
     SymbolsResponse actualResponse = mapper(json);

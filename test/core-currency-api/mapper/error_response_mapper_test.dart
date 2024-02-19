@@ -7,8 +7,8 @@ import '../const.dart';
 
 ///Tests to check the JSON parsing flow to [ErrorResponse] object
 void main() {
-  late ErrorResponse fullDataResponse = const ErrorResponse(code: 104, info: "Message");
-  late ErrorResponse emptyInfoResponse = const ErrorResponse(code: 104, info: null);
+  late ErrorResponse fullDataResponse = const ErrorResponse(success: false, error: ErrorDataResponse(code: 104, info: "Message"));
+  late ErrorResponse emptyInfoResponse = const ErrorResponse(success: false, error: ErrorDataResponse(code: 104, info: null));
 
   final ErrorResponseMapper mapper = ErrorResponseMapper();
 
