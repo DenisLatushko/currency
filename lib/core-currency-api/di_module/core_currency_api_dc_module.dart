@@ -9,10 +9,12 @@ import 'package:currency/core-di/dc_module.dart';
 import 'package:currency/core-di/dependency_provider.dart';
 import 'package:currency/core-di/registration_controller.dart';
 import 'package:currency/core-network/api_client.dart';
+import 'package:currency/core-network/interceptor/logging_debug_interceptor.dart';
 import 'package:currency/core-network/interceptor/request_query_params_interceptor.dart';
 import 'package:currency/core-network/response/response_json_model_mapper.dart';
 import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 const String currencyApiClientName = "CurrencyApiClientName";
 const String currencyHttpClientName = "CurrencyHttpClientName";
@@ -50,6 +52,7 @@ class CoreCurrencyApiDcModule implements DcModule {
       Dio dio = Dio(baseOptions);
 
       dio.interceptors.add(dp.get(apiKeyInterceptorName));
+      if(kDebugMode) dio.interceptors.add(dp.get<LoggingDebugInterceptor>());
 
       return dio;
     }, currencyHttpClientName);
