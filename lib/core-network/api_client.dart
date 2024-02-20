@@ -23,18 +23,19 @@ class ApiClient implements HttpServiceClient {
     return _responseResultMapper(response, request.dataModelMapper);
   }
 
-  Future<Response> _get<T>(GetRequest<T> request) => _httpClient.get(request.path, queryParameters: request.params,
-      options: defineOptions(request));
+  Future<Response> _get<T>(GetRequest<T> request) async => _httpClient.get(request.path, queryParameters: request.params,
+      options: await defineOptions(request));
 
 
   // TODO Extend the logic with different body types
-  Future<Response> _post<T>(PostRequest<T> request) => _httpClient.post(request.path, data: request.params,
-      options: defineOptions(request));
+  Future<Response> _post<T>(PostRequest<T> request) async => _httpClient.post(request.path, data: request.params,
+      options: await defineOptions(request));
 
-  Options defineOptions<T>(ApiRequest<T> request) {
+  Future<Options> defineOptions<T>(ApiRequest<T> request) async {
     CacheSettings? cacheSettings = request.cacheSettings;
     if (cacheSettings != null) {
-      return cacheSettings.toOptions()..headers = request.headers;
+      Options options = await cacheSettings.toOptions();
+      return options..headers = request.headers;
     } else {
       return Options(headers: request.headers);
     }

@@ -7,6 +7,7 @@ import 'package:currency/core-currency-api/response/symbols_response.dart';
 import 'package:currency/core-currency-api/response/symbols_response_mapper.dart';
 import 'package:currency/core-di/dc_module.dart';
 import 'package:currency/core-di/dependency_provider.dart';
+import 'package:currency/core-di/lazy_provider.dart';
 import 'package:currency/core-di/registration_controller.dart';
 import 'package:currency/core-network/api_client.dart';
 import 'package:currency/core-network/http_service_client.dart';
@@ -14,6 +15,7 @@ import 'package:currency/core-network/interceptor/logging_debug_interceptor.dart
 import 'package:currency/core-network/interceptor/request_query_params_interceptor.dart';
 import 'package:currency/core-network/response/response_json_model_mapper.dart';
 import 'package:currency/core-network/response/response_model_mapper.dart';
+import 'package:currency/core-utils/directory_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -39,7 +41,12 @@ class CoreCurrencyApiModule implements DcModule {
         symbolsResponseJsonModelMapperName
     );
 
-    rc.factory(() => SymbolsRequest(dp.get(symbolsResponseJsonModelMapperName)));
+    rc.factory(() => SymbolsRequest(
+        dp.get(symbolsResponseJsonModelMapperName),
+        dp.get<DirectoryProvider>()
+    ));
+
+    rc.factory(() => LazyProvider<SymbolsRequest>(() => dp.get<SymbolsRequest>()));
 
     rc.factory<Interceptor>(() => RequestQueryParamsInterceptor(dp.get(apiKeyParamMapName)), apiKeyInterceptorName);
 

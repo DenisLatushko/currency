@@ -7,6 +7,7 @@ import 'package:currency/core-di/lazy_provider.dart';
 import 'package:currency/core-network/http_service_client.dart';
 import 'package:currency/core-network/response/network_error.dart';
 import 'package:currency/core-network/response/response_model_mapper.dart';
+import 'package:currency/core-utils/directory_provider.dart';
 import 'package:currency/core-utils/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -16,11 +17,11 @@ import '../utils/expect.dart';
 import 'currency_data_source_impl_test.mocks.dart';
 
 ///Tests for [CurrencyDataSourceImpl]
-@GenerateMocks([HttpServiceClient, LazyProvider, SymbolsDataModelMapper, ResponseModelMapper, Success])
+@GenerateMocks([HttpServiceClient, LazyProvider, SymbolsDataModelMapper, ResponseModelMapper, Success, DirectoryProvider])
 void main() {
   const SymbolsDataModel symbolsDataModel = SymbolsDataModel({});
   const SymbolsResponse symbolsResponse = SymbolsResponse(success: true, symbols: {});
-  final SymbolsRequest symbolsRequest = SymbolsRequest(MockResponseModelMapper<SymbolsResponse>());
+  final SymbolsRequest symbolsRequest = SymbolsRequest(MockResponseModelMapper<SymbolsResponse>(), MockDirectoryProvider());
 
   late MockHttpServiceClient apiClientMock;
   late MockSymbolsDataModelMapper symbolsDataModelMapperMock;

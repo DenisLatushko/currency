@@ -561,3 +561,4 @@ tags
 **/*.freezed.dart
 **/*.mocks.dart
 /api_secrets.env
+/.flutter-plugins-dependencies

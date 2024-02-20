@@ -1,14 +1,25 @@
+import 'package:currency/core-currency-api/di/core_currency_api_module.dart';
+import 'package:currency/core-currency-datasource/currency_data_source.dart';
+import 'package:currency/core-currency-datasource/di/currency_data_source_module.dart';
+import 'package:currency/core-currency-datasource/model/symbols_data_model.dart';
+import 'package:currency/core-di/dc.dart';
+import 'package:currency/core-di/dependency_provider.dart';
+import 'package:currency/core-network/di/core_network_module.dart';
+import 'package:currency/core-network/response/network_error.dart';
+import 'package:currency/core-utils/di/utils_module.dart';
+import 'package:currency/core-utils/result.dart';
 import 'package:flutter/material.dart';
 
 void main() async{
-  // DependencyProvider dp = DC.dependencyProvider;
-  // dp.initModule([CoreNetworkModule(), CoreCurrencyApiModule(), CurrencyDataSourceModule()]);
-  //
-  // CurrencyDataSource currencyDataSource = dp.get<CurrencyDataSource>();
-  //
-  // Result<SymbolsDataModel, NetworkError> result = await currencyDataSource.fetchSupportedSymbols();
-  
   runApp(const MyApp());
+
+  DependencyProvider dp = DC.dependencyProvider
+    ..initModule([CoreNetworkModule(), CoreCurrencyApiModule(), CurrencyDataSourceModule(), UtilsModule()]);
+
+  CurrencyDataSource currencyDataSource = dp.get<CurrencyDataSource>();
+
+  Result<SymbolsDataModel, NetworkError> result = await currencyDataSource.fetchSupportedSymbols();
+  print(result);
 }
 
 class MyApp extends StatelessWidget {
