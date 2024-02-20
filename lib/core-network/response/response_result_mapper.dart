@@ -1,9 +1,10 @@
 import 'dart:io';
+
 import 'package:currency/core-network/response/network_error.dart';
 import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-utils/num_ext.dart';
-import 'package:dio/dio.dart';
 import 'package:currency/core-utils/result.dart';
+import 'package:dio/dio.dart';
 
 ///A mapper to convert [Response] from the remote server to an object with data from the response body
 class ResponseResultMapper {

@@ -7,7 +7,7 @@ import 'package:currency/core-network/interceptor/logging_debug_interceptor.dart
 import 'package:currency/core-network/response/response_result_mapper.dart';
 import 'package:currency/core-utils/json.dart';
 
-class CoreNetworkDcModule implements DcModule {
+class CoreNetworkModule implements DcModule {
   @override
   void initModule(DependencyProvider dp, RegistrationController rc) {
     rc.factory(Json.new);

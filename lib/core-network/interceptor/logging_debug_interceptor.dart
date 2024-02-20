@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'dart:developer' as developer;
-
 import 'package:flutter/foundation.dart';
 
 class LoggingDebugInterceptor extends LogInterceptor {

@@ -9,6 +9,7 @@ import 'package:currency/core-di/dc_module.dart';
 import 'package:currency/core-di/dependency_provider.dart';
 import 'package:currency/core-di/registration_controller.dart';
 import 'package:currency/core-network/api_client.dart';
+import 'package:currency/core-network/http_service_client.dart';
 import 'package:currency/core-network/interceptor/logging_debug_interceptor.dart';
 import 'package:currency/core-network/interceptor/request_query_params_interceptor.dart';
 import 'package:currency/core-network/response/response_json_model_mapper.dart';
@@ -22,7 +23,7 @@ const String apiKeyParamMapName = "ApiKeyParamMapName";
 const String apiKeyInterceptorName = "ApiKeyInterceptorName";
 const String symbolsResponseJsonModelMapperName = "SymbolsResponseJsonModelMapper";
 
-class CoreCurrencyApiDcModule implements DcModule {
+class CoreCurrencyApiModule implements DcModule {
   @override
   void initModule(DependencyProvider dp, RegistrationController rc) {
     rc.factory(() => {"access_key" : CurrencyApiEnv.apiKey}, apiKeyParamMapName);
@@ -57,6 +58,6 @@ class CoreCurrencyApiDcModule implements DcModule {
       return dio;
     }, currencyHttpClientName);
 
-    rc.singleton(ApiClient(dp.get(currencyHttpClientName), dp.get()), currencyApiClientName);
+    rc.singleton<HttpServiceClient>(ApiClient(dp.get(currencyHttpClientName), dp.get()), currencyApiClientName);
   }
 }

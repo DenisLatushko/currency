@@ -1,10 +1,10 @@
+import 'package:currency/core-di/dc_module.dart';
+import 'package:currency/core-di/dependency_provider.dart';
 import 'package:currency/core-di/lazy_provider.dart';
 import 'package:currency/core-di/registration_controller.dart';
 import 'package:currency/core-di/scope_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
-import 'package:currency/core-di/dc_module.dart';
-import 'package:currency/core-di/dependency_provider.dart';
 
 ///A Singleton dependency graph manager. Basically this is a wrapper above the [GetIt] service locator.
 ///The functionality is divided by the following interfaces:

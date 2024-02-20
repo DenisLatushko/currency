@@ -4,25 +4,25 @@ import 'package:currency/core-currency-datasource/currency_data_source_impl.dart
 import 'package:currency/core-currency-datasource/model/symbols_data_model.dart';
 import 'package:currency/core-currency-datasource/model/symbols_data_model_mapper.dart';
 import 'package:currency/core-di/lazy_provider.dart';
-import 'package:currency/core-network/api_client.dart';
+import 'package:currency/core-network/http_service_client.dart';
 import 'package:currency/core-network/response/network_error.dart';
 import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-utils/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+
 import '../utils/expect.dart';
 import 'currency_data_source_impl_test.mocks.dart';
 
 ///Tests for [CurrencyDataSourceImpl]
-@GenerateMocks([ApiClient, LazyProvider, SymbolsDataModelMapper, ResponseModelMapper, Success])
+@GenerateMocks([HttpServiceClient, LazyProvider, SymbolsDataModelMapper, ResponseModelMapper, Success])
 void main() {
   const SymbolsDataModel symbolsDataModel = SymbolsDataModel({});
   const SymbolsResponse symbolsResponse = SymbolsResponse(success: true, symbols: {});
   final SymbolsRequest symbolsRequest = SymbolsRequest(MockResponseModelMapper<SymbolsResponse>());
 
-
-  late MockApiClient apiClientMock;
+  late MockHttpServiceClient apiClientMock;
   late MockSymbolsDataModelMapper symbolsDataModelMapperMock;
   late MockLazyProvider<SymbolsRequest> symbolsRequestLazyMock;
   late MockLazyProvider<MockSymbolsDataModelMapper> symbolsDataModelMapperLazyMock;
@@ -34,7 +34,7 @@ void main() {
   provideDummy<MockSymbolsDataModelMapper>(MockSymbolsDataModelMapper());
 
   setUp(() {
-    apiClientMock = MockApiClient();
+    apiClientMock = MockHttpServiceClient();
     symbolsDataModelMapperMock = MockSymbolsDataModelMapper();
     symbolsRequestLazyMock = MockLazyProvider<SymbolsRequest>();
     symbolsDataModelMapperLazyMock = MockLazyProvider<MockSymbolsDataModelMapper>();

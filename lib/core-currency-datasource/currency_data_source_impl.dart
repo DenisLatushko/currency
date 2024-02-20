@@ -4,14 +4,14 @@ import 'package:currency/core-currency-datasource/currency_data_source.dart';
 import 'package:currency/core-currency-datasource/model/symbols_data_model.dart';
 import 'package:currency/core-currency-datasource/model/symbols_data_model_mapper.dart';
 import 'package:currency/core-di/lazy_provider.dart';
-import 'package:currency/core-network/api_client.dart';
+import 'package:currency/core-network/http_service_client.dart';
 import 'package:currency/core-network/response/network_error.dart';
 import 'package:currency/core-utils/result.dart';
 
 ///A basic interface for currency data source
 class CurrencyDataSourceImpl implements CurrencyDataSource {
 
-  final ApiClient _apiClient;
+  final HttpServiceClient _apiClient;
   final LazyProvider<SymbolsRequest> _symbolsRequest;
   final LazyProvider<SymbolsDataModelMapper> _symbolsDataModelMapper;
 
