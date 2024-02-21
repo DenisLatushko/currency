@@ -1,5 +1,7 @@
+import 'package:equatable/equatable.dart';
+
 ///A base class which presents a result of operation
-sealed class Result<S, E> {
+sealed class Result<S, E> extends Equatable{
   const Result();
 }
 
@@ -7,13 +9,20 @@ sealed class Result<S, E> {
 class Success<S, E> extends Result<S, E> {
   final S data;
 
-  Success(this.data);
+  const Success(this.data);
+
+  @override
+  List<Object?> get props => [data];
 }
 
 ///A base class which presents a result of operation which is failed
 class Error<S, E> extends Result<S, E> {
   final E? error;
-  Error(this.error);
+
+  const Error(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }
 
 ///Extension functions for [Result] to convert it to a specific subtype
