@@ -38,6 +38,11 @@ class DC implements DependencyProvider, RegistrationController, ScopeController 
   }
 
   @override
+  void lazyFactory<T extends Object>(T Function() factory, [String? named]) {
+    _getItInstance.registerFactory<LazyProvider<T>>(() => LazyProvider<T>(factory), instanceName: named);
+  }
+
+  @override
   void singleton<T extends Object>(T instance, [String? named]) {
     _getItInstance.registerSingleton(instance, instanceName: named);
   }
