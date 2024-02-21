@@ -6,6 +6,10 @@ abstract interface class RegistrationController {
   ///objects then use [named] to receive the required object
   void factory<T extends Object>(T Function() factory, [String? named]);
 
+  ///Add unique instance of dependency. Each time when [lazyFactory] called an of [LazyProvider]
+  ///instantiated. This provider is allowed to create an object on demand
+  void lazyFactory<T extends Object>(T Function() factory, [String? named]);
+
   ///Add single instance of dependency. Each time when [singleton] called only one
   ///instance of dependency provided. If there are more then one instance of one type
   ///objects then use [named] to receive the required object
