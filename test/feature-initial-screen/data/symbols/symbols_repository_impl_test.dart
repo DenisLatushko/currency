@@ -3,7 +3,6 @@ import 'package:currency/core-currency-datasource/model/symbols_data_model.dart'
 import 'package:currency/core-di/lazy_provider.dart';
 import 'package:currency/core-network/response/network_error.dart';
 import 'package:currency/core-utils/result.dart';
-import 'package:currency/feature-initial-screen/data/symbols/symbols_domain_model_mapper.dart';
 import 'package:currency/feature-initial-screen/data/symbols/symbols_repository_impl.dart';
 import 'package:currency/feature-initial-screen/domain/model/symbols_domain_model.dart';
 import 'package:mockito/annotations.dart';
@@ -12,7 +11,6 @@ import 'package:test/test.dart';
 
 import '../../../utils/expect.dart';
 import '../../../utils/function.dart';
-
 @GenerateNiceMocks([MockSpec<CurrencyDataSource>(), MockSpec<Function1>(), MockSpec<LazyProvider>()])
 import 'symbols_repository_impl_test.mocks.dart';
 

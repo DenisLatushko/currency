@@ -25,6 +25,8 @@ import '../utils/function.dart';
 ])
 import 'currency_data_source_impl_test.mocks.dart';
 
+typedef SymbolsDataModelMapperFunction = SymbolsDataModel Function(SymbolsResponse);
+
 ///Tests for [CurrencyDataSourceImpl]
 void main() {
   const SymbolsDataModel symbolsDataModel = SymbolsDataModel({});
@@ -32,9 +34,9 @@ void main() {
   final SymbolsRequest symbolsRequest = SymbolsRequest(MockFunction1<Result<SymbolsResponse, NetworkError>, dynamic>(), MockDirectoryProvider());
 
   late MockHttpServiceClient apiClientMock;
-  late MockSymbolsDataModelMapper symbolsDataModelMapperMock;
+  late MockFunction1<SymbolsDataModel, SymbolsResponse> symbolsDataModelMapperMock;
   late MockLazyProvider<SymbolsRequest> symbolsRequestLazyMock;
-  late MockLazyProvider<MockSymbolsDataModelMapper> symbolsDataModelMapperLazyMock;
+  late MockLazyProvider<SymbolsDataModelMapperFunction> symbolsDataModelMapperLazyMock;
 
   late CurrencyDataSourceImpl dataSource;
 
@@ -44,9 +46,9 @@ void main() {
 
   setUp(() {
     apiClientMock = MockHttpServiceClient();
-    symbolsDataModelMapperMock = MockSymbolsDataModelMapper();
+    symbolsDataModelMapperMock = MockFunction1<SymbolsDataModel, SymbolsResponse>();
     symbolsRequestLazyMock = MockLazyProvider<SymbolsRequest>();
-    symbolsDataModelMapperLazyMock = MockLazyProvider<MockSymbolsDataModelMapper>();
+    symbolsDataModelMapperLazyMock = MockLazyProvider<SymbolsDataModelMapperFunction>();
 
     dataSource = CurrencyDataSourceImpl(apiClientMock, symbolsRequestLazyMock, symbolsDataModelMapperLazyMock);
 
@@ -56,7 +58,7 @@ void main() {
   });
 
   test('Given datasource when success fetch for symbols then success result returned', () async {
-    final Success<SymbolsResponse, NetworkError> successResponse = Success<SymbolsResponse, NetworkError>(symbolsResponse);
+    const Success<SymbolsResponse, NetworkError> successResponse = Success<SymbolsResponse, NetworkError>(symbolsResponse);
     provideDummy<Result<SymbolsResponse, NetworkError>>(successResponse);
 
     when(apiClientMock.execute<SymbolsResponse>(any)).thenAnswer((_) async => successResponse);
@@ -78,7 +80,7 @@ void main() {
   });
 
   test('Given datasource when success fetch for symbols then all instances invoked', () async {
-    final Success<SymbolsResponse, NetworkError> successResponse = Success<SymbolsResponse, NetworkError>(symbolsResponse);
+    const Success<SymbolsResponse, NetworkError> successResponse = Success<SymbolsResponse, NetworkError>(symbolsResponse);
     provideDummy<Result<SymbolsResponse, NetworkError>>(successResponse);
 
     when(apiClientMock.execute<SymbolsResponse>(any)).thenAnswer((_) async => successResponse);

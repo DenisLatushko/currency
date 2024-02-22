@@ -10,7 +10,7 @@ void main() {
   late ErrorResponse fullDataResponse = const ErrorResponse(success: false, error: ErrorDataResponse(code: 104, info: "Message"));
   late ErrorResponse emptyInfoResponse = const ErrorResponse(success: false, error: ErrorDataResponse(code: 104, info: null));
 
-  final ErrorResponseMapper mapper = ErrorResponseMapper();
+  const ErrorResponseMapper mapper = ErrorResponseMapper();
 
   test('Given error JSON when parse then object has all values', () {
     final Map<String, dynamic> json = readJsonFromFile(errorFilePath);
