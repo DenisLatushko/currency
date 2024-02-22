@@ -1,17 +1,26 @@
 import 'package:currency/core-network/api_client.dart';
 import 'package:currency/core-network/request/api_request.dart';
 import 'package:currency/core-network/response/network_error.dart';
-import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-network/response/response_result_mapper.dart';
 import 'package:currency/core-utils/result.dart';
 import 'package:dio/dio.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+import '../utils/function.dart';
+
+@GenerateNiceMocks([
+  MockSpec<Dio>(),
+  MockSpec<ResponseResultMapper>(),
+  MockSpec<GetRequest>(),
+  MockSpec<PostRequest>(),
+  MockSpec<Function1>(),
+  MockSpec<Response>(),
+  MockSpec<Success>()
+])
 import 'api_client_test.mocks.dart';
 
 ///Tests for [ApiClient]
-@GenerateMocks([Dio, ResponseResultMapper, GetRequest, PostRequest, ResponseModelMapper, Response, Success])
 void main() {
   const String path = '/path';
   const Map<String, String> requestParams = {'key': 'value'};
@@ -19,20 +28,19 @@ void main() {
 
   late MockDio clientMock;
   late MockResponseResultMapper responseResultMapperMock;
-  late MockResponseModelMapper<Object> responseModelMapperMock;
-
+  late MockFunction1<Result<Object, NetworkError>, dynamic> responseModelMapperMock;
 
   late MockGetRequest<Object> getRequestMock;
   late MockPostRequest<Object> postRequestMock;
 
-
   final MockResponse responseMock = MockResponse();
   final MockSuccess<Object, NetworkError> successMock = MockSuccess();
   provideDummy<Result<Object, NetworkError>>(successMock);
+  provideDummy<Result<dynamic, NetworkError>>(successMock);
 
   late ApiClient apiClient;
 
-  setUp(() {
+  setUp(() async {
     void mockRequest(ApiRequest<Object> request) {
       when(request.path).thenReturn(path);
       when(request.params).thenReturn(requestParams);
@@ -43,7 +51,7 @@ void main() {
 
     clientMock = MockDio();
     responseResultMapperMock = MockResponseResultMapper();
-    responseModelMapperMock = MockResponseModelMapper();
+    responseModelMapperMock = MockFunction1<Result<Object, NetworkError>, dynamic>();
     getRequestMock = MockGetRequest<Object>();
     postRequestMock = MockPostRequest<Object>();
 
@@ -54,7 +62,7 @@ void main() {
 
     when(clientMock.get(any, queryParameters: anyNamed("queryParameters"), options: anyNamed("options"))).thenAnswer((_) async => responseMock);
     when(clientMock.post(any, data: anyNamed("data"), options: anyNamed("options"))).thenAnswer((_) async => responseMock);
-    when(responseResultMapperMock.call(responseMock, responseModelMapperMock)).thenReturn(successMock);
+    when(responseResultMapperMock.call<Object>(responseMock, responseModelMapperMock)).thenReturn(successMock);
   });
 
   void verifyHttpCallOrder(ApiRequest apiRequestMock, Function() httpClientCall) {

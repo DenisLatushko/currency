@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:currency/core-network/response/network_error.dart';
-import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-network/response/response_result_mapper.dart';
 import 'package:currency/core-utils/result.dart';
 import 'package:dio/dio.dart';
@@ -8,11 +7,12 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import '../../utils/expect.dart';
+import '../../utils/function.dart';
 
+@GenerateNiceMocks([MockSpec<Response>(),MockSpec<Function1>()])
 import 'response_result_mapper_test.mocks.dart';
 
 ///Tests for [ResponseResultMapper]
-@GenerateMocks([Response, ResponseModelMapper])
 void main() {
   const httpSuccessCode = 200;
   const httpFailedCode = 500;
@@ -21,15 +21,15 @@ void main() {
   const responsePhraseData = "RESPONSE_PHRASE";
   const mappedValue = "MAPPED_VALUE";
 
-  final successResponseModel = Success<String, NetworkError>(mappedValue);
+  const successResponseModel = Success<String, NetworkError>(mappedValue);
   late MockResponse responseMock;
-  late MockResponseModelMapper<String> responseModelMapper;
+  late MockFunction1<Result<String, NetworkError>, dynamic> responseModelMapper;
 
   late ResponseResultMapper mapper;
 
   setUp(() {
     responseMock = MockResponse();
-    responseModelMapper = MockResponseModelMapper<String>();
+    responseModelMapper = MockFunction1<Result<String, NetworkError>, dynamic>();
     mapper = ResponseResultMapper();
 
     when(responseModelMapper(successResponseBodyData)).thenReturn(successResponseModel);

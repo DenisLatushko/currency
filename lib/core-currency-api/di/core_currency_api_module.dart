@@ -14,8 +14,8 @@ import 'package:currency/core-network/api_client.dart';
 import 'package:currency/core-network/http_service_client.dart';
 import 'package:currency/core-network/interceptor/logging_debug_interceptor.dart';
 import 'package:currency/core-network/interceptor/request_query_params_interceptor.dart';
+import 'package:currency/core-network/request/api_request.dart';
 import 'package:currency/core-network/response/response_json_model_mapper.dart';
-import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-utils/directory_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -26,19 +26,22 @@ const String apiKeyParamMapName = "ApiKeyParamMapName";
 const String apiKeyInterceptorName = "ApiKeyInterceptorName";
 const String symbolsResponseJsonModelMapperName = "SymbolsResponseJsonModelMapper";
 
+typedef _SymbolsResponseMapperFunction = SymbolsResponse Function(Map<String, dynamic>);
+typedef _ErrorResponseMapperFunction = ErrorResponse Function(Map<String, dynamic>);
+
 class CoreCurrencyApiModule implements DcModule {
   @override
   void initModule(DependencyProvider dp, RegistrationController rc) {
     rc.factory(() => {"access_key" : CurrencyApiEnv.apiKey}, apiKeyParamMapName);
 
-    rc.factory<SymbolsResponse Function(Map<String, dynamic>)>(() => const SymbolsResponseMapper());
+    rc.factory<_SymbolsResponseMapperFunction>(() => const SymbolsResponseMapper());
 
-    rc.factory<ErrorResponse Function(Map<String, dynamic>)>(() => const ErrorResponseMapper());
+    rc.factory<_ErrorResponseMapperFunction>(() => const ErrorResponseMapper());
 
-    rc.factory<ResponseModelMapper<SymbolsResponse>>(() => ResponseJsonModelMapper(
+    rc.factory<ResponseModelMapperFunction<SymbolsResponse>>(() => ResponseJsonModelMapper(
         dp.get(),
-        dp.get<SymbolsResponse Function(Map<String, dynamic>)>(),
-        dp.get<ErrorResponse Function(Map<String, dynamic>)>()),
+        dp.get<_SymbolsResponseMapperFunction>(),
+        dp.get<_ErrorResponseMapperFunction>()),
         symbolsResponseJsonModelMapperName
     );
 

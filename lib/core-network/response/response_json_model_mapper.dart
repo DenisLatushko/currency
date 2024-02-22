@@ -1,19 +1,17 @@
 import 'package:currency/core-currency-api/response/error_response.dart';
 import 'package:currency/core-network/response/network_error.dart';
-import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-utils/json.dart';
 import 'package:currency/core-utils/result.dart';
 
 ///A mapper with a logic to convert JSON received from HTTP response to
 ///[Result] with an instance of JSON object
-class ResponseJsonModelMapper<S> implements ResponseModelMapper<S> {
+class ResponseJsonModelMapper<S> {
   final Json _json;
   final S Function(Map<String, dynamic>) _successResponseMapper;
   final ErrorResponse Function(Map<String, dynamic>) _errorResponseMapper;
 
   ResponseJsonModelMapper(this._json, this._successResponseMapper, this._errorResponseMapper);
 
-  @override
   Result<S, NetworkError> call(dynamic jsonData) {
     Map<String, dynamic>? jsonMap;
     if(jsonData is String) {

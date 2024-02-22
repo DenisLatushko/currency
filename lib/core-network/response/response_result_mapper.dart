@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:currency/core-network/request/api_request.dart';
 import 'package:currency/core-network/response/network_error.dart';
-import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-utils/num_ext.dart';
 import 'package:currency/core-utils/result.dart';
 import 'package:dio/dio.dart';
@@ -10,12 +10,12 @@ import 'package:dio/dio.dart';
 class ResponseResultMapper {
 
   static const int _httpSuccessCodesStart = 200;
-  static const int _httpSuccessCodesEnd = 200;
+  static const int _httpSuccessCodesEnd = 299;
 
   ///A function to do the conversion
   ///[response] is a response object received from the HTTP framework as a result of HTTP request
   ///[jsonMapper] a [Function] which is called to convert response to an object
-  Result<S, NetworkError> call<S>(final Response response, final ResponseModelMapper<S> responseModelMapper) {
+  Result<S, NetworkError> call<S>(final Response response, final ResponseModelMapperFunction<S> responseModelMapper) {
     int statusCode = response.statusCode ?? httpStatusCodeNotSet;
     return switch(statusCode.isBetween(_httpSuccessCodesStart, _httpSuccessCodesEnd, incLeft: true, incRight: true)) {
       true => responseModelMapper(response.data),
