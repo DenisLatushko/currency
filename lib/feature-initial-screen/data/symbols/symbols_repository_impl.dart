@@ -3,7 +3,6 @@ import 'package:currency/core-currency-datasource/model/symbols_data_model.dart'
 import 'package:currency/core-di/lazy_provider.dart';
 import 'package:currency/core-network/response/network_error.dart';
 import 'package:currency/core-utils/result.dart';
-import 'package:currency/feature-initial-screen/data/symbols/symbols_domain_model_mapper.dart';
 import 'package:currency/feature-initial-screen/domain/model/symbols_domain_model.dart';
 import 'package:currency/feature-initial-screen/domain/repository/symbols_repository.dart';
 
@@ -11,7 +10,7 @@ import 'package:currency/feature-initial-screen/domain/repository/symbols_reposi
 final class SymbolsRepositoryImpl implements SymbolsRepository {
 
   final CurrencyDataSource _currencyDataSource;
-  final LazyProvider<SymbolsDomainModelMapper> _symbolsDomainModelMapper;
+  final LazyProvider<SymbolsDomainModel Function(SymbolsDataModel)> _symbolsDomainModelMapper;
 
   SymbolsRepositoryImpl(this._currencyDataSource, this._symbolsDomainModelMapper);
 

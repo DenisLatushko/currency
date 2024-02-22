@@ -12,9 +12,11 @@ import 'package:test/test.dart';
 
 import '../../../utils/expect.dart';
 import '../../../utils/function.dart';
-@GenerateNiceMocks([MockSpec<CurrencyDataSource>(), MockSpec<SymbolsDomainModelMapper>(), MockSpec<LazyProvider>()])
+
+@GenerateNiceMocks([MockSpec<CurrencyDataSource>(), MockSpec<Function1>(), MockSpec<LazyProvider>()])
 import 'symbols_repository_impl_test.mocks.dart';
 
+typedef SymbolsDomainModelMapperFunction = SymbolsDomainModel Function(SymbolsDataModel);
 
 ///Tests for [SymbolsRepositoryImpl]
 void main() {
@@ -29,17 +31,18 @@ void main() {
   late Error<SymbolsDomainModel, NetworkError> errorDomain = const Error<SymbolsDomainModel, NetworkError>(null);
 
   late MockCurrencyDataSource currencyDataSourceMock;
-  late MockSymbolsDomainModelMapper symbolsDomainModelMapperMock;
-  late MockLazyProvider<MockSymbolsDomainModelMapper> symbolsDomainModelMapperLazyMock;
+  late MockFunction1<SymbolsDomainModel, SymbolsDataModel> symbolsDomainModelMapperMock;
+  late MockLazyProvider<SymbolsDomainModelMapperFunction> symbolsDomainModelMapperLazyMock;
   late SymbolsRepositoryImpl repository;
 
   setUp(() {
     currencyDataSourceMock = MockCurrencyDataSource();
-    symbolsDomainModelMapperMock = MockSymbolsDomainModelMapper();
-    symbolsDomainModelMapperLazyMock = MockLazyProvider<MockSymbolsDomainModelMapper>();
+    symbolsDomainModelMapperMock = MockFunction1<SymbolsDomainModel, SymbolsDataModel>();
+    symbolsDomainModelMapperLazyMock = MockLazyProvider<SymbolsDomainModelMapperFunction>();
     repository = SymbolsRepositoryImpl(currencyDataSourceMock, symbolsDomainModelMapperLazyMock);
 
-    provideDummy<MockSymbolsDomainModelMapper>(symbolsDomainModelMapperMock);
+    provideDummy<Function1<SymbolsDomainModel, SymbolsDataModel>>(symbolsDomainModelMapperMock);
+
     when(symbolsDomainModelMapperMock(any)).thenReturn(domainModel);
     when(symbolsDomainModelMapperLazyMock.get()).thenReturn(symbolsDomainModelMapperMock);
   });

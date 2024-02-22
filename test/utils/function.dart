@@ -1,7 +1,6 @@
-abstract interface class Function1<T, P> {
-  T call(P param);
-}
+import 'package:mockito/mockito.dart';
 
-abstract interface class FunctionNoParams<T> {
-  T call();
+///A stub of a functional type which has one parameter [P] and return [T]
+class Function1<T, P> extends Mock {
+  T call(P? param);
 }
