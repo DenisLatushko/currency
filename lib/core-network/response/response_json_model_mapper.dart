@@ -1,5 +1,4 @@
 import 'package:currency/core-currency-api/response/error_response.dart';
-import 'package:currency/core-network/response/json_model_mapper.dart';
 import 'package:currency/core-network/response/network_error.dart';
 import 'package:currency/core-network/response/response_model_mapper.dart';
 import 'package:currency/core-utils/json.dart';
@@ -9,8 +8,8 @@ import 'package:currency/core-utils/result.dart';
 ///[Result] with an instance of JSON object
 class ResponseJsonModelMapper<S> implements ResponseModelMapper<S> {
   final Json _json;
-  final JsonModelMapper<S> _successResponseMapper;
-  final JsonModelMapper<ErrorResponse> _errorResponseMapper;
+  final S Function(Map<String, dynamic>) _successResponseMapper;
+  final ErrorResponse Function(Map<String, dynamic>) _errorResponseMapper;
 
   ResponseJsonModelMapper(this._json, this._successResponseMapper, this._errorResponseMapper);
 

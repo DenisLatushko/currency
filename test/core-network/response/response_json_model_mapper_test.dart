@@ -1,5 +1,4 @@
 import 'package:currency/core-currency-api/response/error_response.dart';
-import 'package:currency/core-network/response/json_model_mapper.dart';
 import 'package:currency/core-network/response/network_error.dart';
 import 'package:currency/core-network/response/response_json_model_mapper.dart';
 import 'package:currency/core-utils/json.dart';
@@ -8,10 +7,11 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import '../../utils/expect.dart';
+import '../../utils/function.dart';
 import 'response_json_model_mapper_test.mocks.dart';
 
 ///Tests for [ResponseJsonModelMapper]
-@GenerateMocks([Json, JsonModelMapper])
+@GenerateMocks([Json, Function1])
 void main() {
   const ErrorResponse errorResponse = ErrorResponse(success: false, error: ErrorDataResponse(code: 104, info: "Message"));
   const ErrorResponse errorNoInfoResponse = ErrorResponse(success: false, error: ErrorDataResponse(code: 104, info: null));
@@ -22,15 +22,15 @@ void main() {
   late Map<String, dynamic> jsonMapError = {'error': {}};
 
   late MockJson jsonMock;
-  late MockJsonModelMapper<Object> successResponseMapperMock;
-  late MockJsonModelMapper<ErrorResponse> errorResponseMapperMock;
+  late MockFunction1<Object, Map<String, dynamic>> successResponseMapperMock;
+  late MockFunction1<ErrorResponse, Map<String, dynamic>> errorResponseMapperMock;
   late ResponseJsonModelMapper<Object> mapper;
 
   setUp(() {
     provideDummy(errorResponse);
     jsonMock = MockJson();
-    successResponseMapperMock = MockJsonModelMapper<Object>();
-    errorResponseMapperMock = MockJsonModelMapper<ErrorResponse>();
+    successResponseMapperMock = MockFunction1<Object, Map<String, dynamic>>();
+    errorResponseMapperMock = MockFunction1<ErrorResponse, Map<String, dynamic>>();
     mapper = ResponseJsonModelMapper(jsonMock, successResponseMapperMock, errorResponseMapperMock);
 
     when(successResponseMapperMock.call(any)).thenReturn(responseValue);

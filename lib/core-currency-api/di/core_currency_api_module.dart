@@ -2,6 +2,7 @@
 
 import 'package:currency/core-currency-api/currency_api_env.dart';
 import 'package:currency/core-currency-api/request/symbols_request.dart';
+import 'package:currency/core-currency-api/response/error_response.dart';
 import 'package:currency/core-currency-api/response/error_response_mapper.dart';
 import 'package:currency/core-currency-api/response/symbols_response.dart';
 import 'package:currency/core-currency-api/response/symbols_response_mapper.dart';
@@ -30,14 +31,14 @@ class CoreCurrencyApiModule implements DcModule {
   void initModule(DependencyProvider dp, RegistrationController rc) {
     rc.factory(() => {"access_key" : CurrencyApiEnv.apiKey}, apiKeyParamMapName);
 
-    rc.factory(SymbolsResponseMapper.new);
+    rc.factory<SymbolsResponse Function(Map<String, dynamic>)>(() => const SymbolsResponseMapper());
 
-    rc.factory(ErrorResponseMapper.new);
+    rc.factory<ErrorResponse Function(Map<String, dynamic>)>(() => const ErrorResponseMapper());
 
     rc.factory<ResponseModelMapper<SymbolsResponse>>(() => ResponseJsonModelMapper(
         dp.get(),
-        dp.get<SymbolsResponseMapper>(),
-        dp.get<ErrorResponseMapper>()),
+        dp.get<SymbolsResponse Function(Map<String, dynamic>)>(),
+        dp.get<ErrorResponse Function(Map<String, dynamic>)>()),
         symbolsResponseJsonModelMapperName
     );
 
