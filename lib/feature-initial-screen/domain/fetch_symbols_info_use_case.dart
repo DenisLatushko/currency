@@ -3,8 +3,6 @@ import 'package:currency/core-utils/result.dart';
 import 'package:currency/feature-initial-screen/domain/model/symbols_domain_model.dart';
 import 'package:currency/feature-initial-screen/domain/repository/symbols_repository.dart';
 
-typedef FetchSymbolsInfoUseCaseFunction = Future<Result<SymbolsDomainModel, NetworkError>> Function();
-
 ///Use case to compute the information about symbols
 final class FetchSymbolsInfoUseCase {
 
